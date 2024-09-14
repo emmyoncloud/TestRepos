@@ -1,0 +1,211 @@
+# https://learn.microsoft.com/en-us/azure/devops/?view=azure-devops
+trigger:
+- main
+ 
+pool:
+vmImage: ubuntu-latest
+ 
+stages:
+- stage: BuildApp
+displayName: Build Apps
+
+jobs:
+
+- job: BuildFrontendApp
+displayName: Build Frontend App
+steps:
+- script: echo building frontend app
+displayName: build frontend app
+- script: echo running unit tests for frontend app
+displayName: unit tests frontend
+ 
+- job: BuildBackendApp
+displayName: Build Backend App
+steps:
+- script: echo building backend app
+displayName: build backend app
+- script: echo running unit tests for backend app
+displayName: unit tests backend
+ 
+- stage: DeployDev
+displayName: Deploy to DEV environment
+
+jobs:
+- job: DeployFrontendDev
+displayName: Deploy frontend to DEV
+steps:
+- script: echo deploying frontend app to DEV
+displayName: deploy frontend app to DEV
+ 
+- job: DeployBackendDev
+displayName: Deploy backend to DEV
+steps:
+- script: echo deploying backend app to DEV
+displayName: deploy backend app to DEV
+ 
+- stage: DeployProd
+displayName: Deploy to PROD environment
+pool:
+vmImage: 'ubuntu-20.04'
+jobs:
+- job: DeployFrontendProd
+displayName: Deploy frontend to PROD
+steps:
+- script: echo deploying frontend app to PROD
+displayName: deploy frontend app to PROD
+ 
+- job: DeployBackendProd
+displayName: Deploy backend to PROD
+#pool:
+#vmImage: 'ubuntu-20.04'
+steps:
+- script: echo deploying backend app to PROD
+displayName: deploy backend app to PROD
+
+
+
+stages:
+- stage: BuildApp
+# code removed for brievety…
+- stage: DeployDev
+dependsOn: []
+# code removed for brievety…
+- stage: DeployProd
+dependsOn: []
+# code removed for brievety…
+
+
+
+
+stages:
+- stage: Test
+- stage: DeployUS1
+dependsOn: Test # this stage runs after Test
+- stage: DeployUS2
+dependsOn: Test # this stage runs in parallel with DeployUS1, after Test
+- stage: DeployEurope
+dependsOn: # this stage runs after DeployUS1 and DeployUS2
+- DeployUS1
+- DeployUS2
+
+
+
+
+trigger:
+- main
+ 
+pool:
+vmImage: ubuntu-latest
+ 
+stages:
+- stage: Test
+jobs:
+- job: test
+steps:
+- script: echo testing app
+ 
+- stage: DeployUS1
+dependsOn: Test # this stage runs after Test
+jobs:
+- job: deploy_us1
+steps:
+- script: echo deploying to US1
+ 
+- stage: DeployUS2
+dependsOn: Test # this stage runs in parallel with DeployUS1, after Test
+jobs:
+- job: deploy_us2
+steps:
+- script: echo deploying to US2
+ 
+- stage: DeployEurope
+dependsOn: # this stage runs after DeployUS1 and DeployUS2
+- DeployUS1
+- DeployUS2
+jobs:
+- job: deploy_europe
+steps:
+- script: echo deploying to Europe
+
+
+
+
+#Example of a normal condition
+stages:
+- stage: A
+# stage B runs if A fails
+- stage: B
+condition: failed()
+# stage C runs if B succeeds
+- stage: C
+dependsOn:
+- A
+- B
+condition: succeeded('B')
+
+
+#Example of using a custom condition:
+stages:
+- stage: A
+- stage: B
+condition: and(succeeded(), eq(variable['build.sourceBranch'], 'refs/heads/main'))
+
+
+
+jobs:
+- job: Foo
+  steps:
+  - script: echo Hello!
+    condition: always() # this step runs, even if the build is canceled
+
+- job: Bar
+  dependsOn: Foo
+  condition: failed() # this job runs only if Foo fails
+
+
+
+variables:
+  isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+
+stages:
+- stage: A
+  jobs:
+  - job: A1
+    steps:
+      - script: echo Hello Stage A!
+
+- stage: B
+  condition: and(succeeded(), eq(variables.isMain, true))
+  jobs:
+  - job: B1
+    steps:
+      - script: echo Hello Stage B!
+      - script: echo $(isMain)
+      # 'Failed' $[eq(variables['Build.SourceBranch'], 'refs/heads/main', 'Failed')]
+      # 'Succeeded' $[eq(variables['Build.SourceBranch'], 'refs/heads/main', 'Succeeded')]
+      # 'SucceededWithIssues' $[eq(variables['Build.SourceBranch'], 'refs/heads/main', 'SucceededWithIssues')]
+# https://learn.microsoft.com/en-us/azure/devops/pipelines/process/conditions?view=azure-devops&tabs=yaml
+      
+
+
+trigger:
+- none  # Disable CI triggers if you only want the pipeline to run on a schedule
+# https://crontab.guru/
+schedules:
+- cron: "0 0 * * *"  # Cron syntax for midnight every day
+  displayName: "Daily midnight build"
+  branches:
+    include:
+    - main  # Specify the branches to include
+  always: true  # Always run the pipeline, even if there are no code changes
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+stages:
+- stage: Build
+  jobs:
+  - job: BuildJob
+    steps:
+    - script: echo "Running the build process..."
+      displayName: "Run build script"
