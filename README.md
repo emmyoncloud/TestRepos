@@ -24,10 +24,15 @@ Follow these instructions to get a copy of the project up and running on your lo
    cd simple-git-test-repo
    ```
 
-3. **Open the `index.html` file in your browser to view the website:**
+3. **Open the `index.htm` file in your browser to view the website:**
 
    ```sh
-   open index.html
+   open index.htm
+   ```
+4. **Open the `secret recipe.htm` file in your browser to view the website:**
+
+   ```sh
+   open secret recipe.htm
    ```
 
 ## Usage
