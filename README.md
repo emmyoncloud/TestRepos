@@ -15,13 +15,13 @@ Follow these instructions to get a copy of the project up and running on your lo
 1. **Clone the repository:**
 
    ```sh
-   git clone https://github.com/your-username/simple-git-test-repo.git
+   git clone https://github.com/emmyoncloud/TestRepos.git
    ```
 
 2. **Navigate to the project directory:**
 
    ```sh
-   cd simple-git-test-repo
+   cd TestRepos
    ```
 
 3. **Open the `index.htm` file in your browser to view the website:**
@@ -29,10 +29,10 @@ Follow these instructions to get a copy of the project up and running on your lo
    ```sh
    open index.htm
    ```
-4. **Open the `secret recipe.htm` file in your browser to view the website:**
+4. **Open the `secret-recipe.htm` file in your browser to view the website:**
 
    ```sh
-   open secret recipe.htm
+   open secret-recipe.htm
    ```
 
 ## Usage
