@@ -1,4 +1,4 @@
-# Simple Git Test Repo
+# A Simple Git Test Repo.
 
 This repository is a simple example of how to use Git for managing a static HTML website.
 
