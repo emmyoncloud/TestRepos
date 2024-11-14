@@ -71,9 +71,7 @@ Follow these instructions to get a copy of the project up and running on your lo
 
 Feel free to fork this repository and submit pull requests. Contributions are welcome!
 
+```
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-```
-
-Feel free to customize it further to fit your specific needs. If you have any more questions or need further assistance, just let me know! 😊
